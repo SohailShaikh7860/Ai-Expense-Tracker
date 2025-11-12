@@ -50,7 +50,7 @@ const getTripExpenses = async(req,res)=>{
     const {id}= req.params;
 
     try {
-        const trip = await tripExpense.findById(id).lean({ virtuals: true });
+        const trip = await TripExpenses.findById(id).lean({ virtuals: true });
         if(!trip){
             return res.status(404).json({message:"Trip expense not found"});
         }
