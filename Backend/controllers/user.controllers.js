@@ -166,14 +166,19 @@ const resetPassword = async (req, res) => {
     }
     console.log(otp);
 
-    if (user.resetOtp !== otp || user.resetOtp == "") {
-      return res.status(400).json({ message: "Invalid Otp" });
+    if (!user.resetOtp || user.resetOtp === "") {
+      return res.status(400).json({ message: "No OTP found. Please request a new one." });
     }
 
     if (user.resetOtpExpiry < Date.now()) {
       user.resetOtp = "";
       user.resetOtpExpiry = 0;
       return res.status(400).json({ message: "Otp Expired" });
+    }
+
+     console.log('Stored OTP:', user.resetOtp, 'Received OTP:', otp);
+    if (user.resetOtp !== otp) {
+      return res.status(400).json({ message: "Invalid OTP" });
     }
     user.password = newPassword;
     user.resetOtp = "";
