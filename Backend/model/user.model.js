@@ -16,18 +16,6 @@ const userSchema = new Schema({
         type:String,
         required:true
     },
-    verifyOtp:{
-        type:String,
-        default: ''
-    },
-    verifyOtpExpiry:{
-        type:Number,
-        default: 0
-    },
-    isAccountVerified:{
-        type:Boolean,
-        default:false
-    },
     resetOtp:{
         type:String,
         default:''

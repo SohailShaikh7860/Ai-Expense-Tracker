@@ -84,6 +84,8 @@ const SignUp = () => {
           required
         />
 
+        {error && <p className="text-red-600 font-bold mb-4 text-center">{error}</p>}
+
         <button className="bg-black text-yellow-400 font-black text-xl md:text-2xl uppercase py-3 px-6 border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-2 hover:translate-y-2 transition-all mb-2 select-none" type="submit" onClick={handleSubmit}>
           Submit
         </button>

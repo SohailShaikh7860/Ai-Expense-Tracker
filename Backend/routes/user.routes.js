@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createUser, loginUser, getCurrentUser, logOutUser } from "../controllers/user.controllers.js";
+import { createUser, loginUser, getCurrentUser, logOutUser, resetPassOtp,resetPassword } from "../controllers/user.controllers.js";
 import { body } from "express-validator";
 import {authToken} from "../middleware/auth.js";
 
@@ -16,6 +16,9 @@ router.post('/login',
     body('password').notEmpty().withMessage('Password is required').trim(),
     loginUser
 )
+
+router.post('/send-reset-otp',resetPassOtp);
+router.post('/reset-password',resetPassword);
 
 router.get('/login',authToken,getCurrentUser);
 router.get('/logout',authToken,logOutUser);
