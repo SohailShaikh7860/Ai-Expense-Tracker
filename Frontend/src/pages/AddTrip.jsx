@@ -55,9 +55,21 @@ const AddTrips = () => {
     setError('')
     setSuccess('')
 
+    const sanitizedData = {
+      ...formData,
+      totalIncome: Number(formData.totalIncome) || 0,
+      fuelCost: Number(formData.fuelCost) || 0,
+      hamaali: Number(formData.hamaali) || 0,
+      paidTransport: Number(formData.paidTransport) || 0,
+      maintenanceCost: Number(formData.maintenanceCost) || 0,
+      otherExpenses: Number(formData.otherExpenses) || 0,
+      commission: Number(formData.commission) || 0,
+      pendingAmount: Number(formData.pendingAmount) || 0
+    };
+
     try {
       setLoading(true)
-      const result = await addTrip(formData);
+      const result = await addTrip(sanitizedData);
       console.log('Trip created:', result)
       
       if (result.success) {

@@ -12,10 +12,7 @@ const AppRoutes = () => {
         <Route
           path="/forgot"
           element={
-            <ProtectedRoute>
-              {" "}
               <ForgotPage />
-            </ProtectedRoute>
           }
         />
         <Route

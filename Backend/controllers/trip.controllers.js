@@ -61,7 +61,18 @@ const getTripExpenses = async(req,res)=>{
     }
 }
 
+const getAllTripExpenses = async(req,res)=>{
+    try {
+        const trips = await TripExpenses.find().sort({createdAt: -1});
+        return res.status(200).json({trips, count: trips.length});
+    } catch (error) {
+        console.error('Get trips error:',error);
+        return res.status(500).json({message:"Failed to retrieve trips"});
+    }
+}
+
 export{
     createTripExpense,
-    getTripExpenses
+    getTripExpenses,
+    getAllTripExpenses
 }

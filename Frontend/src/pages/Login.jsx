@@ -36,7 +36,7 @@ const Login = () => {
   }
 
   return (
-    <div className='flex justify-center items-center min-h-[calc(100vh-120px)] px-4 py-12 bg-stone-100'>
+    <div className='flex justify-center items-center min-h-[calc(100vh-120px)] px-4 py-12 bg-stone-100 h-screen'>
       <form className='flex flex-col w-full max-w-md p-6 md:p-6 border-8 border-black bg-yellow-400 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] sm:shadow-[16px_16px_0px_0px_rgba(0,0,0,1)]' >
         <h2 className='text-2xl md:text-3xl font-black uppercase text-center mb-5 border-b-4 border-black pb-3'>Login to ExpenseFlow</h2>
 

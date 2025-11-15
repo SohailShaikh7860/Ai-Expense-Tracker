@@ -71,7 +71,7 @@ const loginUser = async (req, res) => {
 
     return res
       .status(200)
-      .json({ message: "Login successful", userId: user._id });
+      .json({ message: "Login successful", user: { name: user.name, email: user.email, id: user._id } });
   } catch (error) {
     console.log("Error", error);
     res.status(500).json({ message: "Internal server error" });
@@ -88,7 +88,12 @@ const getCurrentUser = async (req, res) => {
     );
     if (!user) return res.status(404).json({ message: "User not found" });
 
-    return res.status(200).json({ user: user.name });
+    return res.status(200).json({user: {
+    id: user._id,
+    name: user.name,
+    email: user.email,
+    createdAt: user.createdAt
+  } });
   } catch (error) {
     console.log("Error", error);
     return res.status(500).json({ message: "Internal server error" });

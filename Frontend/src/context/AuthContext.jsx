@@ -14,10 +14,10 @@ export const AuthProvider = ({children}) => {
 
     const checkAuth = async()=>{
           try {
-            const response = await axios.get('user/getCurrentUser');
+            const response = await axios.get('/user/getCurrentUser');
+            console.log("user data:",response.data.user.name);
             setUser(response.data.user);
             setIsAuthenticated(true);
-            setLoading(false);
           } catch (error) {
             setIsAuthenticated(false);
             setUser(null);
@@ -31,7 +31,7 @@ export const AuthProvider = ({children}) => {
          try {
             const response = await axios.post('/user/login',{email,password});
             setIsAuthenticated(true);
-            setUser(response.data);
+            setUser(response.data.user);
             return {success: true};
          } catch (error) {
             return{
@@ -44,6 +44,8 @@ export const AuthProvider = ({children}) => {
     const register = async(name,email,password)=>{
         try{
             const response = await axios.post('/user/register',{name,email,password});
+            setUser(response.data.user);
+            setIsAuthenticated(true);
             return {success: true};
         }catch(error){
             return{

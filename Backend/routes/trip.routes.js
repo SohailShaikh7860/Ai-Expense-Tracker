@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createTripExpense, getTripExpenses } from "../controllers/trip.controllers.js";
+import { createTripExpense, getTripExpenses, getAllTripExpenses } from "../controllers/trip.controllers.js";
 import { body } from "express-validator";
 import {authToken} from "../middleware/auth.js";
 
@@ -22,4 +22,5 @@ router.post('/trip-expense',
 );
 
 router.get('/trip-expense/:id',authToken,getTripExpenses);
+router.get('/trip-expenses',authToken,getAllTripExpenses);
 export default router;
