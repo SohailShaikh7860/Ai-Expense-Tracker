@@ -1,13 +1,20 @@
-import React, {useState} from 'react'
+import React, {useState,useEffect} from 'react'
 import {Link} from 'react-router-dom'
-import axios from '../config/Axios';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const Login = () => {
   const navigate=useNavigate();
   const [error,setError]=useState(null);
   const [email,setEmail]=useState('');
   const [password,setPassword]=useState('');
+  const {login,isAuthenticated}=useAuth();
+
+  useEffect(()=>{
+     if(isAuthenticated){
+       navigate('/dashboard');
+     }
+  }, [isAuthenticated, navigate]);
 
   const handleSubmit= async (e)=>{
     e.preventDefault();
@@ -18,8 +25,8 @@ const Login = () => {
     }
 
     try {
-      const formData = await axios.post('/user/login',{email,password});
-      console.log(formData.data);
+      const formData = await login(email, password);
+      console.log(formData);
       navigate('/dashboard');
     } catch (error) {
       console.log("There was an error", error);
