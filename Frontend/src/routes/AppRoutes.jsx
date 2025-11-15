@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom";
-import { Login, Home, Dashboard, ForgotPage, SignUp } from "../pages/pages.js";
+import { Login, Home, Dashboard, ForgotPage, SignUp,AddTrip } from "../pages/pages.js";
 import ProtectedRoute from "./ProtectedRoute.jsx";
 
 const AppRoutes = () => {
@@ -23,6 +23,14 @@ const AppRoutes = () => {
           element={
             <ProtectedRoute>
               <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/add-trip"
+          element={
+            <ProtectedRoute>
+              <AddTrip />
             </ProtectedRoute>
           }
         />
