@@ -10,7 +10,7 @@ const createTripExpense = async(req,res)=>{
       return res.status(400).json({ errors: errors.array() });
     }
 
-    let {Vehicle_Number, route, monthAndYear, totalIncome, fuelCost, driverAllowance, hamaali, paidTransport, maintenanceCost, otherExpenses, commission, pendingAmount, paymentStatus} = req.body;
+    let {Vehicle_Number, route, monthAndYear, totalIncome, fuelCost, driverAllowance, hamaali, paidTransport, maintenanceCost, otherExpenses, commission, pendingAmount, paymentStatus,phonePai} = req.body;
 
     Vehicle_Number = Vehicle_Number?.trim().toString().toUpperCase();
     route = route?.trim().toString();
@@ -31,7 +31,8 @@ const createTripExpense = async(req,res)=>{
             otherExpenses: otherExpenses || 0,
             commission: commission || 0,
             pendingAmount: pendingAmount || 0,
-            paymentStatus: paymentStatus || "Pending"
+            paymentStatus: paymentStatus || "Pending",
+            phonePai: phonePai || 0
         });
 
         const netProfit = tripExpense.netProfit;
@@ -71,8 +72,98 @@ const getAllTripExpenses = async(req,res)=>{
     }
 }
 
+const updateTrips = async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  const { id } = req.params;
+
+  const allowedFields = [
+    "Vehicle_Number",
+    "route",
+    "monthAndYear",
+    "totalIncome",
+    "fuelCost",
+    "hamaali",
+    "paidTransport",
+    "maintenanceCost",
+    "otherExpenses",
+    "commission",
+    "pendingAmount",
+    "paymentStatus",
+    "phonePai"
+  ];
+
+  const updates = {};
+
+  
+  allowedFields.forEach(field => {
+    if (req.body[field] !== undefined) updates[field] = req.body[field];
+  });
+
+  
+  if (updates.Vehicle_Number)
+    updates.Vehicle_Number = updates.Vehicle_Number.trim().toUpperCase();
+
+  if (updates.route)
+    updates.route = updates.route.trim();
+
+  if (updates.monthAndYear)
+    updates.monthAndYear = updates.monthAndYear.trim();
+
+ 
+  if (req.body.driverAllowance) {
+    updates.driverAllowance = {
+      totalSalary: req.body.driverAllowance.totalSalary ?? undefined,
+      bonus: req.body.driverAllowance.bonus ?? undefined,
+      paid: req.body.driverAllowance.paid ?? undefined
+    };
+  }
+
+  try {
+    const updatedTrip = await TripExpenses.findByIdAndUpdate(
+      id,
+      updates,
+      { new: true, runValidators: true }
+    ).lean({ virtuals: true });
+
+    if (!updatedTrip) {
+      return res.status(404).json({ message: "Trip expense not found" });
+    }
+
+    return res.status(200).json({
+      message: "Trip expense updated successfully",
+      trip: updatedTrip
+    });
+
+  } catch (error) {
+    console.error("Update trip error:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+const deleteTrip = async(req,res)=>{
+    const {id}= req.params;
+
+    try {
+        const deletTrip = await TripExpenses.findByIdAndDelete(id);
+        if(!deletTrip){
+            return res.status(404).json({message:"Trip expense not found"});
+        }
+        return res.status(200).json({message:"Trip expense deleted successfully"});
+    } catch (error) {
+        console.error("Delete trip error:", error);
+        return res.status(500).json({message:"Internal server error"});
+    }
+}
+
+
 export{
     createTripExpense,
     getTripExpenses,
-    getAllTripExpenses
+    getAllTripExpenses,
+    updateTrips,
+    deleteTrip
 }

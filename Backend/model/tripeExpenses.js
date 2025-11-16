@@ -64,6 +64,10 @@ const tripeExpensesSchema = new Schema({
         enum: ["Pending", "Cleared"],
         default: "Pending" 
     },
+    phonePai:{
+        type:Number,
+        default:0
+    },
     createdAt:{
         type:Date,
         default:Date.now

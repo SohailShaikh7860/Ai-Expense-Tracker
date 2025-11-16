@@ -28,6 +28,40 @@ export const TripProvider = ({children}) => {
        }
   }
 
+  const updateTrips = async(TripId, tripData)=>{
+    try {
+      setLoading(true);
+      const response = await axios.put(`/trip/${TripId}`, tripData);
+
+      const update = trips.map((trip)=>{
+        trip._id === TripId ? response.data.trip : trip
+      })
+      setTrips(update);
+      calculateStats(update);
+      return { success: true, data: response.data };
+    } catch (error) {
+      console.error("Update trip error:", error);
+      return { success: false, message: error.response?.data?.message || 'Failed to update trip' };
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  const deleteTrip = async(TripId)=>{
+    try {
+      const response = await axios.delete(`/trip/${TripId}`);
+      const updatedTrips = trips.filter((trip) => trip._id !== TripId);
+      setTrips(updatedTrips);
+      calculateStats(updatedTrips);
+      return { success: true, data: response.data };
+    } catch (error) {
+      console.error("Delete trip error:", error);
+      return { success: false, message: error.response?.data?.message || 'Failed to delete trip' };
+    } finally {
+      setLoading(false);
+    }
+  }
+
   const fetchTrips = async()=>{
     try {
       setLoading(true);
@@ -74,7 +108,7 @@ const calculateStats = (tripsData) => {
     totalIncome,
     totalExpenses,
     netProfit,
-    pendingAmount
+    pendingAmount,
   });
 };
 
@@ -85,7 +119,9 @@ const calculateStats = (tripsData) => {
     setLoading,
     addTrip,
     fetchTrips,
-    tripStats
+    tripStats,
+    updateTrips,
+    deleteTrip
   }
 
   return (
