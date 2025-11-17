@@ -42,7 +42,7 @@ const Dashboard = () => {
         
         <button 
           onClick={() => navigate('/add-trip')}
-          className='bg-black text-yellow-400 font-black text-lg uppercase py-3 px-6 border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-2 hover:translate-y-2 transition-all select-none'
+          className='bg-black text-yellow-400 font-black text-lg uppercase py-3 px-6 border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-2 hover:translate-y-2 transition-all select-none cursor-pointer'
         >
           + Add Trip
         </button>
@@ -153,7 +153,7 @@ const Dashboard = () => {
                   <td className='p-4'>
                    <button 
                           onClick={() => navigate(`/trip/${trip._id}`)}
-                          className='bg-yellow-400 border-2 border-black px-3 py-1 font-bold text-xs uppercase hover:bg-black hover:text-yellow-400 transition-colors'
+                          className='bg-yellow-400 border-2 border-black px-3 py-1 font-bold text-xs uppercase hover:bg-black hover:text-yellow-400 transition-colors cursor-pointer'
                         >
                       View
                     </button>
@@ -164,37 +164,43 @@ const Dashboard = () => {
           </table>
         </div>
 
-        
-        <div className='md:hidden'>
-          {recentTrips.map((trip) => (
-            <div key={trip.id} className='border-t-4 border-black p-4 bg-white'>
-              <div className='flex justify-between items-start mb-2'>
-                <div>
-                  <p className='font-black text-lg'>{trip.Vehicle_Number}</p>
-                  <p className='font-bold text-sm text-gray-600'>{trip.route}</p>
-                </div>
-                <span className={`font-black uppercase text-xs px-3 py-1 border-2 border-black ${
-                  trip.paymentStatus === 'Cleared' ? 'bg-green-400' : 'bg-orange-400'
-                }`}>
-                  {trip.paymentStatus}
-                </span>
-              </div>
-              <div className='flex justify-between items-center'>
-                <div>
-                  <p className='text-xs font-bold uppercase text-gray-600'>Income</p>
-                  <p className='font-black text-xl text-green-600'>₹{trip.totalIncome.toLocaleString('en-IN')}</p>
-                </div>
-                <button 
-                      onClick={() => navigate(`/trip/${trip._id}`)}
-                      className='bg-yellow-400 border-2 border-black px-4 py-2 font-bold text-sm uppercase hover:bg-black hover:text-yellow-400 transition-colors'
-                    >
-                  View
-                </button>
-              </div>
-              <p className='text-xs font-bold text-gray-500 mt-2'>{new Date(trip.createdAt).toLocaleDateString('en-IN')}</p>
-            </div>
-          ))}
+
+{/* Mobile View */}
+<div className='md:hidden'>
+  {recentTrips.map((trip) => (
+    <div key={trip.id} className='border-t-4 border-black p-4 bg-white'>
+      <div className='flex justify-between items-start mb-2 gap-2'>
+        <div className='flex-1 min-w-0'>
+          <p className='font-black text-lg'>{trip.Vehicle_Number}</p>
+          <p className='font-bold text-xs text-gray-600 break-words overflow-wrap-anywhere'>
+            {trip.route}
+          </p>
         </div>
+        <span className={`font-black uppercase text-xs px-2 py-1 border-2 border-black whitespace-nowrap flex-shrink-0 ${
+          trip.paymentStatus === 'Cleared' ? 'bg-green-400' : 'bg-orange-400'
+        }`}>
+          {trip.paymentStatus}
+        </span>
+      </div>
+      <div className='flex justify-between items-center mt-3'>
+        <div>
+          <p className='text-xs font-bold uppercase text-gray-600'>Income</p>
+          <p className='font-black text-xl text-green-600'>₹{trip.totalIncome.toLocaleString('en-IN')}</p>
+        </div>
+        <button 
+          onClick={() => navigate(`/trip/${trip._id}`)}
+          className='bg-yellow-400 border-2 border-black px-4 py-2 font-bold text-sm uppercase hover:bg-black hover:text-yellow-400 transition-colors cursor-pointer'
+        >
+          View
+        </button>
+      </div>
+      <p className='text-xs font-bold text-gray-500 mt-2'>
+        {new Date(trip.createdAt).toLocaleDateString('en-IN')}
+      </p>
+    </div>
+  ))}
+</div>
+
 
         <div className='border-t-4 border-black p-4 bg-stone-50 text-center'>
           <button 

@@ -33,7 +33,7 @@ const AppRoutes = () => {
         />
 
         <Route
-         path="/view/:id"
+         path="/trip/:id"
          element={
           <ProtectedRoute>
             <View />
