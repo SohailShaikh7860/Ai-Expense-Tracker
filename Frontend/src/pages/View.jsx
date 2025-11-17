@@ -59,18 +59,57 @@ const View = () => {
   const downloadPDF = async () => {
     try {
       const element = document.getElementById("trip-details-container");
+
+      const originalWidth = element.style.width;
+      const originalMaxWidth = element.style.maxWidth;
+      const originalPadding = element.style.padding;
+
+       const gridElements = element.querySelectorAll('[class*="grid-cols"]');
+    const originalGridClasses = [];
+    
+    gridElements.forEach((el, index) => {
+      originalGridClasses[index] = el.className;
+      if (el.className.includes('md:grid-cols-2')) {
+        el.className = el.className.replace(/grid-cols-\d+/g, 'grid-cols-2');
+      }
+      if (el.className.includes('lg:grid-cols-3')) {
+        el.className = el.className.replace(/grid-cols-\d+/g, 'grid-cols-3');
+      }
+      if (el.className.includes('md:grid-cols-4')) {
+        el.className = el.className.replace(/grid-cols-\d+/g, 'grid-cols-4');
+      }
+    });
+
+      element.style.width = "1200px";
+      element.style.maxWidth = "1200px";
+      element.style.padding = "40px"; 
+
+      await new Promise((resolve) => setTimeout(resolve, 500));
+
       const canvas = await html2canvas(element, {
         scale: 2,
         useCORS: true,
         logging: false,
         backgroundColor: "#ffffff",
+        width:1200,
+        windowWidth:1200
       });
+
+      element.style.width = originalWidth;
+    element.style.maxWidth = originalMaxWidth;
+    element.style.padding = originalPadding;
+
+    gridElements.forEach((el, index) => {
+      el.className = originalGridClasses[index];
+    });
+
       const imgData = canvas.toDataURL("image/png");
 
-      const pdf = new jsPDF("p", "mm", "a4");
-      const imgWidth = 210;
-      const pageHeight = 297;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      const pdf = new jsPDF("l", "mm", "a4");
+      const imgWidth = 297;
+      const pageHeight = 210;
+      const pdfWidth = imgWidth;
+      const imgHeight = (canvas.height * pdfWidth) / canvas.width;
       let heightLeft = imgHeight;
       let position = 0;
 
@@ -404,6 +443,7 @@ const View = () => {
                             dataKey="value"
                             stroke="#000"
                             strokeWidth={2}
+                            isAnimationActive={false}
                           >
                             {expenseData.map((entry, index) => (
                               <Cell key={`cell-${index}`} fill={entry.color} />
