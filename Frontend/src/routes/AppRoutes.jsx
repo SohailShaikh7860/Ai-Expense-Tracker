@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom";
-import { Login, Home, Dashboard, ForgotPage, SignUp,AddTrip, View, DeleteTrip, EditTrip } from "../pages/pages.js";
+import { Login, Home, Dashboard, ForgotPage, SignUp,AddTrip, View, EditTrip } from "../pages/pages.js";
 import ProtectedRoute from "./ProtectedRoute.jsx";
 
 const AppRoutes = () => {
@@ -40,14 +40,7 @@ const AppRoutes = () => {
           </ProtectedRoute>
          }
         />  
-        <Route
-         path="/delete/:id"
-         element={
-          <ProtectedRoute>
-            <DeleteTrip />
-          </ProtectedRoute>
-         }
-        />
+
         <Route
          path="/edit/:id"
          element={
