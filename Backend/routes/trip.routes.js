@@ -5,9 +5,14 @@ import {
   getAllTripExpenses,
   updateTrips,
   deleteTrip,
+  uploadRecipt,
+  deleteRecipt,
+  getReceipts
 } from "../controllers/trip.controllers.js";
 import { body } from "express-validator";
 import { authToken } from "../middleware/auth.js";
+import { upload } from "../utils/cloudinary.js";
+
 
 const router = Router();
 
@@ -132,4 +137,10 @@ router.delete("/:id", authToken, deleteTrip);
 
 router.get("/trip-expense/:id", authToken, getTripExpenses);
 router.get("/trip-expenses", authToken, getAllTripExpenses);
+
+
+//upload receipt routes
+router.post('/trip/:id/receipt', upload.single('receipt'), uploadRecipt);
+router.delete('/trip/:id/receipt/:receiptId', deleteRecipt);
+router.get('/trip/:id/receipts', getReceipts);
 export default router;

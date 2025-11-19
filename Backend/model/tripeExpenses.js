@@ -1,4 +1,5 @@
 import mongoose, {Schema} from "mongoose";
+import { upload } from "../utils/cloudinary.js";
 
 const tripeExpensesSchema = new Schema({
     Vehicle_Number:{
@@ -68,6 +69,20 @@ const tripeExpensesSchema = new Schema({
         type:Number,
         default:0
     },
+    receipts:[{
+        url:{
+            type:String,
+            required:true
+        },
+        public_id:{
+            type:String,
+            required:true
+        },
+        uploadedAt:{
+            type:Date,
+            default:Date.now
+        }
+    }],
     createdAt:{
         type:Date,
         default:Date.now

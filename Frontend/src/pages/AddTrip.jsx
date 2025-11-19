@@ -26,7 +26,8 @@ const AddTrips = () => {
     otherExpenses: '',
     commission: '',
     pendingAmount: '',
-    paymentStatus: 'Pending'
+    paymentStatus: 'Pending',
+    phonePai: ''
   })
 
   const handleChange = (e) => {

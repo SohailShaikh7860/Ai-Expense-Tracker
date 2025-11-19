@@ -1,5 +1,6 @@
 import TripExpenses from "../model/tripeExpenses.js";
 import { validationResult } from "express-validator";
+import { cloudinary } from "../utils/cloudinary.js";
 
 const createTripExpense = async(req,res)=>{
  
@@ -159,11 +160,80 @@ const deleteTrip = async(req,res)=>{
     }
 }
 
+const uploadRecipt = async(req,res)=>{
+    try {
+      const {id} = req.params;
+      if(!req.file){
+        return res.status(400).json({message:"No file uploaded"});
+      }
+
+      const trip = await TripExpenses.findById(id);
+      if(!trip){
+        return res.status(404).json({message:"Trip expense not found"});
+      }
+
+      trip.receipts.push({
+        url: req.file.path,
+        public_id: req.file.filename,
+        uploadedAt: new Date()
+      })
+      await trip.save();
+      res.status(200).json({message:"Receipt uploaded successfully", receipt: trip.receipts[trip.receipts.length - 1]});
+    } catch (error) {
+      console.log('upload error',error);
+      return res.status(500).json({message:"Failed to upload receipt"});
+    }
+}
+
+const deleteRecipt = async(req,res)=>{
+    try {
+      const {id, receiptId} = req.params;
+
+      const trip = await TripExpenses.findById(id);
+      if(!trip){
+        return res.status(404).json({message:"Trip expense not found"});
+      }
+
+      const receipt = trip.receipts.id(receiptId);
+      if(!receipt){
+        return res.status(404).json({message:"Receipt not found"});
+      }
+
+      await cloudinary.uploader.destroy(receipt.public_id);
+
+      trip.receipts.pull(receiptId);
+      await trip.save();
+
+      res.status(200).json({message:"Receipt deleted successfully"});
+    } catch (error) {
+      console.log('delete receipt error',error);
+      return res.status(500).json({message:"Failed to delete receipt"});
+    }
+  }
+
+ const getReceipts = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const trip = await TripExpenses.findById(id).select('receipts');
+    if (!trip) {
+      return res.status(404).json({ message: 'Trip not found' });
+    }
+
+    res.status(200).json({ receipts: trip.receipts });
+  } catch (error) {
+    console.error('Get receipts error:', error);
+    res.status(500).json({ message: 'Failed to get receipts' });
+  }
+};
 
 export{
     createTripExpense,
     getTripExpenses,
     getAllTripExpenses,
     updateTrips,
-    deleteTrip
+    deleteTrip,
+    uploadRecipt,
+    deleteRecipt,
+    getReceipts
 }
