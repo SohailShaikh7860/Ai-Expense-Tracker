@@ -6,7 +6,7 @@ import cors from 'cors';
 
 const app = express();
 
-const originalUrl = process.env.FRONTEND || 'http://localhost:5173';
+const originalUrl = process.env.FRONTEND
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
