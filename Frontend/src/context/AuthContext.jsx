@@ -29,6 +29,7 @@ export const AuthProvider = ({children}) => {
 
     const login = async(email, password) => {
          try {
+            
             const response = await axios.post('/user/login',{email,password});
             setIsAuthenticated(true);
             setUser(response.data.user);
