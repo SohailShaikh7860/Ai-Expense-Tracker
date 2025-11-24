@@ -33,15 +33,15 @@ export const TripProvider = ({children}) => {
       setLoading(true);
       const response = await axios.put(`/trip/${TripId}`, tripData);
 
-      const update = trips.map((trip)=>{
+      const update = trips.map((trip) => 
         trip._id === TripId ? response.data.trip : trip
-      })
+      );
+      
       setTrips(update);
       calculateStats(update);
       return { success: true, data: response.data };
     } catch (error) {
-      console.error("Update trip error:", error);
-      return { success: false, message: error.response?.data?.message || 'Failed to update trip' };
+      return { success: false, message: errorMsg };
     } finally {
       setLoading(false);
     }
@@ -76,11 +76,23 @@ export const TripProvider = ({children}) => {
     }
   }
 
+  const fetchSingleTrip = async(tripId) => {
+    try {
+      setLoading(true);
+      const response = await axios.get(`/trip/trip-expense/${tripId}`);
+      return { success: true, trip: response.data.trip };
+    } catch (error) {
+      console.error('Fetch single trip error:', error);
+      return { success: false, message: error.response?.data?.message || 'Failed to fetch trip' };
+    } finally {
+      setLoading(false);
+    }
+  }
+
   const uploadReceipts = async (tripId,file) => {
     try {
       setLoading(true);
       const formData = new FormData();
-      // Assuming 'receipts' is an array of File objects to be uploaded
       formData.append('receipt', file);
       const response = await axios.post(`/trip/${tripId}/receipt`,formData,{
         headers:{
@@ -170,6 +182,7 @@ const calculateStats = (tripsData) => {
     setLoading,
     addTrip,
     fetchTrips,
+    fetchSingleTrip,
     tripStats,
     updateTrips,
     deleteTrip,

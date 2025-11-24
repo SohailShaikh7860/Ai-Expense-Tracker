@@ -219,7 +219,7 @@ const Dashboard = () => {
             <tbody>
               {recentTrips.map((trip, index) => (
                 <tr
-                  key={trip.id}
+                  key={trip._id}
                   className={`border-t-4 border-black ${
                     index % 2 === 0 ? "bg-stone-50" : "bg-white"
                   }`}
@@ -260,7 +260,7 @@ const Dashboard = () => {
         
         <div className="md:hidden">
           {recentTrips.map((trip) => (
-            <div key={trip.id} className="border-t-4 border-black p-4 bg-white">
+            <div key={trip._id} className="border-t-4 border-black p-4 bg-white">
               <div className="flex justify-between items-start mb-2 gap-2">
                 <div className="flex-1 min-w-0">
                   <p className="font-black text-lg">{trip.Vehicle_Number}</p>

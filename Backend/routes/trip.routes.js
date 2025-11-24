@@ -77,54 +77,54 @@ router.put(
   "/:id",
   [
     body("Vehicle_Number")
-      .optional()
+      .optional({ values: 'falsy' })
       .trim()
       .notEmpty()
       .withMessage("Vehicle number cannot be empty"),
     body("route")
-      .optional()
+      .optional({ values: 'falsy' })
       .trim()
       .notEmpty()
       .withMessage("Route cannot be empty"),
     body("monthAndYear")
-      .optional()
+      .optional({ values: 'falsy' })
       .trim()
       .notEmpty()
       .withMessage("Month and year cannot be empty"),
     body("totalIncome")
-      .optional()
+      .optional({ values: 'falsy' })
       .isNumeric()
       .withMessage("Total income must be a number"),
     body("fuelCost")
-      .optional()
+      .optional({ values: 'falsy' })
       .isNumeric()
       .withMessage("Fuel cost must be a number"),
     body("hamaali")
-      .optional()
+      .optional({ values: 'falsy' })
       .isNumeric()
       .withMessage("Hamaali must be a number"),
     body("paidTransport")
-      .optional()
+      .optional({ values: 'falsy' })
       .isNumeric()
       .withMessage("Paid transport must be a number"),
     body("maintenanceCost")
-      .optional()
+      .optional({ values: 'falsy' })
       .isNumeric()
       .withMessage("Maintenance cost must be a number"),
     body("otherExpenses")
-      .optional()
+      .optional({ values: 'falsy' })
       .isNumeric()
       .withMessage("Other expenses must be a number"),
     body("commission")
-      .optional()
+      .optional({ values: 'falsy' })
       .isNumeric()
       .withMessage("Commission must be a number"),
     body("pendingAmount")
-      .optional()
+      .optional({ values: 'falsy' })
       .isNumeric()
       .withMessage("Pending amount must be a number"),
     body("phonePai")
-      .optional()
+      .optional({ values: 'falsy' })
       .isNumeric()
       .withMessage("phonePai must be a number")
       .toFloat(),
@@ -139,8 +139,8 @@ router.get("/trip-expense/:id", authToken, getTripExpenses);
 router.get("/trip-expenses", authToken, getAllTripExpenses);
 
 
+router.post('/:id/receipt', authToken, upload.single('receipt'), uploadRecipt);
+router.delete('/:id/receipt/:receiptId', authToken, deleteRecipt);
+router.get('/:id/receipts', authToken, getReceipts);
 
-router.post('/:id/receipt', upload.single('receipt'), uploadRecipt);
-router.delete('/:id/receipt/:receiptId', deleteRecipt);
-router.get('/:id/receipts', getReceipts);
 export default router;
