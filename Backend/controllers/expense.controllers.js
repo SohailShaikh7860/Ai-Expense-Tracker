@@ -9,12 +9,17 @@ const createExpense = async (req, res) => {
 
     try {
         const userId = req.user.id;
-        const expense = {...req.body, userId };
+        const expenseData = { ...req.body, userId };
 
-        const newExpense = await Expense.create(expense);
+        if (expenseData.recurringFrequency === '' || !expenseData.isRecurring) {
+            expenseData.recurringFrequency = null;
+        }
+
+        const newExpense = await Expense.create(expenseData);
         return res.status(201).json({ message: "Expense created successfully", newExpense });
     } catch (error) {
-        return res.status(500).json({ message: "Internal server error", error: error.message });
+        console.error("Create Expense Error:", error);
+        return res.status(500).json({ message: "Failed to create expense", error: error.message });
     }
 }
 

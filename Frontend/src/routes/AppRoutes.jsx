@@ -1,6 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import { Login, Home, Dashboard, ForgotPage, SignUp,AddTrip, View, EditTrip, Supporters } from "../pages/pages.js";
-import {ExpenseDashboard} from '../../Expense/page.js';
+import {ExpenseDashboard, AddExpense} from '../../Expense/page.js';
 import ProtectedRoute from "./ProtectedRoute.jsx";
 
 const AppRoutes = () => {
@@ -57,6 +57,12 @@ const AppRoutes = () => {
         <Route path='/expense-dashboard' element={
           <ProtectedRoute>
             <ExpenseDashboard />
+          </ProtectedRoute>
+        }/>
+
+        <Route path='/add-expense' element={
+          <ProtectedRoute>
+            <AddExpense />
           </ProtectedRoute>
         }/>
       </Routes>

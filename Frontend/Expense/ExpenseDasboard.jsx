@@ -247,9 +247,9 @@ const ExpenseDashboard = () => {
           <div className="bg-yellow-400 border-4 border-black p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
             <h2 className="font-black text-xl uppercase mb-4">Quick Actions</h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <button className="bg-white border-4 border-black p-4 font-black uppercase text-sm hover:bg-black hover:text-yellow-400 transition-colors shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-1 hover:translate-y-1">
+              <Link to="/add-expense" className="bg-white border-4 border-black p-4 font-black uppercase text-sm hover:bg-black hover:text-yellow-400 transition-colors shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-1 hover:translate-y-1">
                 + Add Expense
-              </button>
+              </Link>
               <button className="bg-white border-4 border-black p-4 font-black uppercase text-sm hover:bg-black hover:text-yellow-400 transition-colors shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-1 hover:translate-y-1">
                 Set Budget
               </button>

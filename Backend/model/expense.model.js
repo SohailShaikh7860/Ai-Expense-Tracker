@@ -59,7 +59,7 @@ const expenseSchma = new Schema({
     },
     recurringFrequency:{
         type:String,
-        enum:['Daily','Weekly','Monthly','Yearly'],
+        enum:['Daily','Weekly','Monthly','Yearly', null],
         default:null
     }
 },{timestamps:true});
