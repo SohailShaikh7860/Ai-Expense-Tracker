@@ -20,9 +20,24 @@ export const SimpleExpenseContextProvider = ({ children }) => {
         }
     }
 
+    const getAllSimpleExpenses = async()=>{
+        setLoading(true); 
+        try {
+            const response = await axios.get('/expense');
+            setExpenses(response.data.expenses);
+            return {success:true, data: response.data};
+        } catch (error) {
+            console.log("Fecthing expense error", error);
+            return {success:false, message: error.response?.data?.message || 'Failed to fetch expenses'};
+        } finally {
+            setLoading(false); 
+        }
+    }
+
 
     const value = {
         createExpense,
+        getAllSimpleExpenses,
         loading,
         simpleUser,
         expenses

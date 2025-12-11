@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, use } from 'react';
 import { useAuth } from '../src/context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import { FiLogOut, FiUser, FiDollarSign, FiTrendingUp, FiPieChart } from 'react-icons/fi';
@@ -10,7 +10,7 @@ const ExpenseDashboard = () => {
   const navigate = useNavigate();
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const profileMenuRef = useRef(null);
-  const {createExpense} = useSimpleExpense();
+  const {getAllSimpleExpenses, expenses, loading} = useSimpleExpense();
 
   const firstLetter = user?.name?.charAt(0).toUpperCase() || 'U';
 
@@ -31,26 +31,93 @@ const ExpenseDashboard = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const stats = {
-    totalExpenses: 45620,
-    thisMonth: 12450,
-    budget: 15000,
-    categories: [
-      { name: 'Food & Dining', amount: 4200, percentage: 34, color: 'bg-yellow-400' },
-      { name: 'Transportation', amount: 2800, percentage: 22, color: 'bg-blue-400' },
-      { name: 'Shopping', amount: 2100, percentage: 17, color: 'bg-pink-400' },
-      { name: 'Bills', amount: 1850, percentage: 15, color: 'bg-green-400' },
-      { name: 'Other', amount: 1500, percentage: 12, color: 'bg-purple-400' }
-    ],
-    recentExpenses: [
-      { id: 1, name: 'Grocery Shopping', amount: 850, category: 'Food', date: '2024-12-07' },
-      { id: 2, name: 'Uber Ride', amount: 250, category: 'Transport', date: '2024-12-07' },
-      { id: 3, name: 'Netflix Subscription', amount: 199, category: 'Bills', date: '2024-12-06' },
-      { id: 4, name: 'Restaurant', amount: 1200, category: 'Food', date: '2024-12-06' }
-    ]
+  useEffect(() => {
+    fetchExpenses();
+  }, []);
+
+  const fetchExpenses = async()=>{
+    try {
+      await getAllSimpleExpenses();
+      console.log("expenses fetched in dashboard");
+    } catch (error) {
+      console.log("fetch expenses error:", error);
+    }
+  }
+
+  
+  const calculateStats = () => {
+    if (!expenses || expenses.length === 0) {
+      return {
+        totalExpenses: 0,
+        thisMonth: 0,
+        budget: 15000, 
+        categories: [],
+        recentExpenses: []
+      };
+    }
+
+    const totalExpenses = expenses.reduce((acc, curr) => acc + curr.amount, 0);
+    
+    const currentMonth = new Date().getMonth();
+    const currentYear = new Date().getFullYear();
+    
+    const thisMonthExpenses = expenses.filter(exp => {
+      const expDate = new Date(exp.date);
+      return expDate.getMonth() === currentMonth && expDate.getFullYear() === currentYear;
+    });
+
+    const thisMonthTotal = thisMonthExpenses.reduce((acc, curr) => acc + curr.amount, 0);
+
+    
+    const categoryMap = {};
+    thisMonthExpenses.forEach(exp => {
+      if (categoryMap[exp.category]) {
+        categoryMap[exp.category] += exp.amount;
+      } else {
+        categoryMap[exp.category] = exp.amount;
+      }
+    });
+
+    const colors = ['bg-yellow-400', 'bg-blue-400', 'bg-pink-400', 'bg-green-400', 'bg-purple-400', 'bg-red-400', 'bg-indigo-400', 'bg-orange-400'];
+    
+    const categories = Object.keys(categoryMap).map((cat, index) => ({
+      name: cat,
+      amount: categoryMap[cat],
+      percentage: Math.round((categoryMap[cat] / thisMonthTotal) * 100),
+      color: colors[index % colors.length]
+    })).sort((a, b) => b.amount - a.amount);
+
+    
+    const recentExpenses = [...expenses]
+      .sort((a, b) => new Date(b.date) - new Date(a.date))
+      .slice(0, 4)
+      .map(exp => ({
+        id: exp._id,
+        name: exp.description || exp.category,
+        amount: exp.amount,
+        category: exp.category,
+        date: new Date(exp.date).toLocaleDateString()
+      }));
+
+    return {
+      totalExpenses,
+      thisMonth: thisMonthTotal,
+      budget: 15000, 
+      categories,
+      recentExpenses
+    };
   };
 
-  const budgetPercentage = (stats.thisMonth / stats.budget) * 100;
+  const stats = calculateStats();
+  const budgetPercentage = stats.budget > 0 ? (stats.thisMonth / stats.budget) * 100 : 0;
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#F0F0F0] flex items-center justify-center">
+        <div className="text-2xl font-black uppercase animate-pulse">Loading...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#F0F0F0]">
@@ -118,9 +185,9 @@ const ExpenseDashboard = () => {
       </header>
 
       <main className="max-w-7xl mx-auto p-4 md:p-6">
-        {/* Stats Cards */}
+        
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-          {/* Total Expenses */}
+          
           <div className="bg-white border-4 border-black p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
             <div className="flex items-center justify-between mb-2">
               <p className="font-black uppercase text-sm">Total Expenses</p>
