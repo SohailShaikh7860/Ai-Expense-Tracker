@@ -16,7 +16,7 @@ const Budget = () => {
     endDate: new Date(new Date().setMonth(new Date().getMonth() + 1)).toISOString().split('T')[0]
   });
 
-  const { AddBudget, getAllBudgets, deleteBudget } = useSimpleExpense();
+  const { AddBudget, getAllBudgets, deleteBudget, loading } = useSimpleExpense();
 
   const categories = [
     'Food & Drinking', 'Transportation', 'Shopping', 'Entertainment',
@@ -101,6 +101,14 @@ const Budget = () => {
     if (percentage >= 75) return 'bg-yellow-500';
     return 'bg-green-500';
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#F0F0F0] flex items-center justify-center">
+        <div className="text-2xl font-black uppercase animate-pulse">Loading...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-stone-100">

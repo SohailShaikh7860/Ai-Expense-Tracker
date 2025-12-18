@@ -134,6 +134,16 @@ export const deleteBudget = async(req,res)=>{
         if(!deletedBudget){
             return res.status(404).json({message: "Budget not found"});
         }
+
+        await Expense.deleteMany({
+            userId,
+            category: deletedBudget.category,
+            date: {
+                $gte: new Date(deletedBudget.startDate),
+                $lte: new Date(deletedBudget.endDate)
+            }
+        });
+        
         return res.status(200).json({message: "Budget deleted successfully"});
     } catch (error) {
         return res.status(500).json({ message: "Failed to delete budget", error: error.message });

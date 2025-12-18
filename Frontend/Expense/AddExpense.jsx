@@ -38,7 +38,6 @@ const AddExpense = () => {
     e.preventDefault();
     try {
         const res = createExpense(formData);
-        console.log("simple expense created");
         navigate('/expense-dashboard');
     } catch (error) {
         console.log(error);    

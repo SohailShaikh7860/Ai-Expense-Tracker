@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect, use } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { useAuth } from '../src/context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import { FiLogOut, FiUser, FiDollarSign, FiTrendingUp, FiPieChart } from 'react-icons/fi';
@@ -115,7 +115,18 @@ const ExpenseDashboard = () => {
 
     const budgetByCategory = budget && Array.isArray(budget)
       ? budget.map(b => {
-          const spent = categoryMap[b.category] || 0;
+        
+          const spent = expenses
+            .filter(exp => {
+              const expDate = new Date(exp.date);
+              const budgetStart = new Date(b.startDate);
+              const budgetEnd = new Date(b.endDate);
+              return exp.category === b.category && 
+                     expDate >= budgetStart && 
+                     expDate <= budgetEnd;
+            })
+            .reduce((sum, exp) => sum + exp.amount, 0);
+          
           const percentage = b.limit > 0 ? (spent / b.limit) * 100 : 0;
           return {
             category: b.category,
@@ -155,12 +166,17 @@ const ExpenseDashboard = () => {
       <header className="bg-[#F0F0F0] border-b-8 border-black p-4 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           
-          <h1 className="font-black text-2xl md:text-3xl uppercase tracking-tight">
+          <h1 className="font-black text-[16px] md:text-3xl uppercase tracking-tight">
             ExpenseFlow
           </h1>
 
           
-          <div className="relative" >
+
+          
+          <div className="flex items-center gap-4 sm:gap-6 relative">
+            <Link to="/add-expense" className="bg-white border-4 border-black px-4 py-2 font-black uppercase text-[10px] sm:text-sm hover:bg-black hover:text-yellow-400 transition-colors shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-1 hover:translate-y-1">
+              + Add Expense
+            </Link>
             <button
               onClick={() => setShowProfileMenu(!showProfileMenu)}
               className="w-12 h-12 bg-black text-[#F0F0F0] border-4 border-black font-black text-xl flex items-center justify-center shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all rounded-full"
@@ -169,7 +185,7 @@ const ExpenseDashboard = () => {
             </button>
 
             {showProfileMenu && (
-              <div className="absolute right-0 mt-2 w-56 bg-white border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]" ref={profileMenuRef}>
+              <div className="absolute right-0 top-full mt-2 w-56 bg-white border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] z-50" ref={profileMenuRef}>
                 
                 <div className="p-4 border-b-4 border-black bg-yellow-400">
                   <p className="font-black text-sm uppercase">Hello,</p>
@@ -234,7 +250,7 @@ const ExpenseDashboard = () => {
               <FiDollarSign className="text-2xl" />
             </div>
             <p className="font-black text-3xl">₹{stats.thisMonth.toLocaleString()}</p>
-            <p className="font-bold text-xs mt-2">December 2024</p>
+            <p className="font-bold text-xs mt-2">December 2025</p>
           </div>
 
           
@@ -391,26 +407,6 @@ const ExpenseDashboard = () => {
           </div>
         )}
 
-        
-        <div className="mt-6">
-          <div className="bg-yellow-400 border-4 border-black p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
-            <h2 className="font-black text-xl uppercase mb-4">Quick Actions</h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <Link to="/add-expense" className="bg-white border-4 border-black p-4 font-black uppercase text-sm hover:bg-black hover:text-yellow-400 transition-colors shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-1 hover:translate-y-1">
-                + Add Expense
-              </Link>
-              <Link to="/budget" className="bg-white border-4 border-black p-4 font-black uppercase text-sm hover:bg-black hover:text-yellow-400 transition-colors shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-1 hover:translate-y-1">
-                Set Budget
-              </Link>
-              <button className="bg-white border-4 border-black p-4 font-black uppercase text-sm hover:bg-black hover:text-yellow-400 transition-colors shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-1 hover:translate-y-1">
-                View Reports
-              </button>
-              <button className="bg-white border-4 border-black p-4 font-black uppercase text-sm hover:bg-black hover:text-yellow-400 transition-colors shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-1 hover:translate-y-1">
-                Export Data
-              </button>
-            </div>
-          </div>
-        </div>
       </main>
     </div>
   );
