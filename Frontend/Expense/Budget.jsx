@@ -8,6 +8,8 @@ const Budget = () => {
   const navigate = useNavigate();
   const [showAddForm, setShowAddForm] = useState(false);
   const [budgets, setBudgets] = useState([]);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [editingBudgetId, setEditingBudgetId] = useState(null);
   const [formData, setFormData] = useState({
     category: 'Food & Drinking',
     limit: '',
@@ -16,7 +18,7 @@ const Budget = () => {
     endDate: new Date(new Date().setMonth(new Date().getMonth() + 1)).toISOString().split('T')[0]
   });
 
-  const { AddBudget, getAllBudgets, deleteBudget, loading } = useSimpleExpense();
+  const { AddBudget, getAllBudgets, deleteBudget, loading, updateBudget } = useSimpleExpense();
 
   const categories = [
     'Food & Drinking', 'Transportation', 'Shopping', 'Entertainment',
@@ -36,11 +38,19 @@ const Budget = () => {
     e.preventDefault();
     
     try {
-     const result = await AddBudget(formData);
+      let result;
+      
+      if (isEditMode && editingBudgetId) {
+        result = await handleUpdate(editingBudgetId, formData);
+      } else {
+        result = await AddBudget(formData);
+      }
 
       if(result.success){
-        console.log('Budget created:', result);
+        console.log(isEditMode ? 'Budget updated:' : 'Budget created:', result);
         setShowAddForm(false);
+        setIsEditMode(false);
+        setEditingBudgetId(null);
         await fetchBudgets();
   
         setFormData({
@@ -51,10 +61,10 @@ const Budget = () => {
         endDate: new Date(new Date().setMonth(new Date().getMonth() + 1)).toISOString().split('T')[0]
       });
       }else{
-        console.error('Failed to create budget:', result.message);
+        console.error(isEditMode ? 'Failed to update budget:' : 'Failed to create budget:', result.message);
       }
     } catch (error) {
-      console.error('Error creating budget:', error);
+      console.error(isEditMode ? 'Error updating budget:' : 'Error creating budget:', error);
     }
     
   };
@@ -85,6 +95,48 @@ const Budget = () => {
       console.error('Error deleting budget:', error);
       return {success:false, message: error.response?.data?.message || 'Failed to delete budget'}
      }
+  }
+
+  const handleUpdate = async(budgetId, updatedData)=>{
+    try {
+      const result = await updateBudget(budgetId, updatedData);
+      if(result.success){
+        await fetchBudgets();
+        return result;
+      }else{
+        console.error('Failed to update budget:', result.message);
+        return result;
+      }
+    } catch (error) {
+      return {success:false, message: error.response?.data?.message || 'Failed to update budget'};
+    }
+  }
+
+  const handleEdit = (budget) => {
+    setIsEditMode(true);
+    setEditingBudgetId(budget._id);
+    setFormData({
+      category: budget.category,
+      limit: budget.limit,
+      period: budget.period,
+      startDate: new Date(budget.startDate).toISOString().split('T')[0],
+      endDate: new Date(budget.endDate).toISOString().split('T')[0]
+    });
+    setShowAddForm(true);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  const handleCancelEdit = () => {
+    setShowAddForm(false);
+    setIsEditMode(false);
+    setEditingBudgetId(null);
+    setFormData({
+      category: 'Food & Drinking',
+      limit: '',
+      period: 'Monthly',
+      startDate: new Date().toISOString().split('T')[0],
+      endDate: new Date(new Date().setMonth(new Date().getMonth() + 1)).toISOString().split('T')[0]
+    });
   }
   
 
@@ -144,7 +196,7 @@ const Budget = () => {
         {showAddForm && (
           <div className="mb-8 bg-white border-4 md:border-8 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-6 md:p-8">
             <h2 className="font-black text-2xl uppercase mb-6 pb-4 border-b-4 border-black">
-              Create New Budget
+              {isEditMode ? 'Edit Budget' : 'Create New Budget'}
             </h2>
             <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
               
@@ -232,11 +284,11 @@ const Budget = () => {
                   type="submit"
                   className="flex-1 bg-black text-yellow-400 font-black text-lg uppercase py-3 border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all"
                 >
-                  Create Budget
+                  {isEditMode ? 'Update Budget' : 'Create Budget'}
                 </button>
                 <button
                   type="button"
-                  onClick={() => setShowAddForm(false)}
+                  onClick={handleCancelEdit}
                   className="flex-1 bg-white text-black font-black text-lg uppercase py-3 border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all"
                 >
                   Cancel
@@ -301,7 +353,7 @@ const Budget = () => {
                       </p>
                     </div>
                     <div className="flex gap-2">
-                      <button className="p-2 border-4 border-black bg-white hover:bg-yellow-400 transition-colors">
+                      <button className="p-2 border-4 border-black bg-white hover:bg-yellow-400 transition-colors" onClick={()=>handleEdit(budget)}>
                         <FiEdit2 className="text-lg" />
                       </button>
                       <button className="p-2 border-4 border-black bg-white hover:bg-red-400 transition-colors" onClick={() => handleDelete(budget._id)}>

@@ -89,6 +89,19 @@ export const SimpleExpenseContextProvider = ({ children }) => {
         }
     }
 
+    const updateBudget = async(budgetId, budgetData)=>{
+        setLoading(true);
+        try {
+            const response = await axios.put(`/budget/updateBudget/${budgetId}`, budgetData);
+            setBudget(response.data.updatedBudget);
+            return {success:true, data: response.data};
+        } catch (error) {
+            return {success:false, message: error.response?.data?.message || 'Failed to update budget'};
+        } finally {
+            setLoading(false);
+        }
+    }
+
 
     const value = {
         createExpense,
@@ -97,6 +110,7 @@ export const SimpleExpenseContextProvider = ({ children }) => {
         getBudget,
         getAllBudgets,
         deleteBudget,
+        updateBudget,
         loading,
         simpleUser,
         expenses,
