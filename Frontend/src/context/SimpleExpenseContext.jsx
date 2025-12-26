@@ -35,6 +35,35 @@ export const SimpleExpenseContextProvider = ({ children }) => {
         }
     }
 
+    const deleteExpense = async(expenseId)=>{
+        setLoading(true)
+         try {
+            const response = await axios.delete(`/expense/${expenseId}`);
+            return {success:true, data: response.data};
+         } catch (error) {
+            console.log("Error in deleting", error.message);
+            return {success:false, message: error.response?.data?.message || 'Failed to delete expense'};
+         }finally{
+            setLoading(false);
+         }
+    }
+
+    const updateExpense = async(expenseId, expenseData)=>{
+        setLoading(true)
+        try {
+            const response = await axios.put(`/expense/${expenseId}`, expenseData);
+            setSimpleUser(response.data.user);
+            return {success:true, data: response.data};
+        } catch (error) {
+            console.log("Error in updating", error.message);
+            return {success:false, message: error.response?.data?.message || 'Failed to update expense'};
+        } finally {
+            setLoading(false);
+        }
+    }
+
+
+    // Budget related operations
     const AddBudget = async(budgetData)=>{
         setLoading(true)
         try {
@@ -106,6 +135,8 @@ export const SimpleExpenseContextProvider = ({ children }) => {
     const value = {
         createExpense,
         getAllSimpleExpenses,
+        deleteExpense,
+        updateExpense,
         AddBudget,
         getBudget,
         getAllBudgets,

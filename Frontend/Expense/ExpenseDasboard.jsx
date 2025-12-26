@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { useAuth } from '../src/context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
-import { FiLogOut, FiUser, FiDollarSign, FiTrendingUp, FiPieChart } from 'react-icons/fi';
+import { FiLogOut, FiUser, FiDollarSign, FiTrendingUp, FiPieChart, FiEdit2, FiTrash2 } from 'react-icons/fi';
 import { MdDashboard, MdAccountBalanceWallet } from 'react-icons/md';
 import { useSimpleExpense } from '../src/context/SimpleExpenseContext';
 
@@ -10,13 +10,24 @@ const ExpenseDashboard = () => {
   const navigate = useNavigate();
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const profileMenuRef = useRef(null);
-  const {getAllSimpleExpenses, expenses, loading, budget, getAllBudgets} = useSimpleExpense();
+  const {getAllSimpleExpenses, expenses, loading, budget, getAllBudgets, deleteExpense} = useSimpleExpense();
 
   const firstLetter = user?.name?.charAt(0).toUpperCase() || 'U';
 
   const handleLogout = async () => {
     await logOut();
     navigate('/login');
+  };
+
+  const handleDeleteExpense = async (id) => {
+    if (window.confirm('Are you sure you want to delete this expense?')) {
+      try {
+        await deleteExpense(id);
+        await fetchExpenses();
+      } catch (error) {
+        console.error('Delete expense error:', error);
+      }
+    }
   };
 
 
@@ -331,11 +342,28 @@ const ExpenseDashboard = () => {
                     key={expense.id}
                     className="p-3 border-2 border-black hover:bg-yellow-400 transition-colors"
                   >
-                    <div className="flex justify-between items-start mb-1">
-                      <p className="font-black text-sm">{expense.name}</p>
-                      <p className="font-black text-sm">₹{expense.amount}</p>
+                    <div className="flex justify-between items-start mb-2">
+                      <div className="flex-1">
+                        <p className="font-black text-sm break-words">{expense.name}</p>
+                      </div>
+                      <div className="flex items-center gap-2 ml-2">
+                        <p className="font-black text-sm whitespace-nowrap">₹{expense.amount}</p>
+                        <button 
+                          className="p-1 hover:bg-black hover:text-yellow-400 border-2 border-black transition-colors"
+                          title="Edit expense"
+                        >
+                          <FiEdit2 className="text-sm" />
+                        </button>
+                        <button 
+                          className="p-1 hover:bg-red-500 hover:text-white border-2 border-black transition-colors"
+                          onClick={() => handleDeleteExpense(expense.id)}
+                          title="Delete expense"
+                        >
+                          <FiTrash2 className="text-sm" />
+                        </button>
+                      </div>
                     </div>
-                    <div className="flex justify-between items-center">
+                    <div className="flex flex-wrap justify-between items-center gap-2">
                       <span className="text-xs font-bold px-2 py-1 bg-gray-200 border border-black">
                         {expense.category}
                       </span>
