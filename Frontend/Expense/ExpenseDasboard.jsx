@@ -10,7 +10,17 @@ const ExpenseDashboard = () => {
   const navigate = useNavigate();
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const profileMenuRef = useRef(null);
-  const {getAllSimpleExpenses, expenses, loading, budget, getAllBudgets, deleteExpense} = useSimpleExpense();
+  const {getAllSimpleExpenses, expenses, loading, budget, getAllBudgets, deleteExpense, updateExpense} = useSimpleExpense();
+  
+  // Edit modal states
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [selectedExpense, setSelectedExpense] = useState(null);
+  const [formData, setFormData] = useState({
+    description: '',
+    amount: '',
+    category: '',
+    date: ''
+  });
 
   const firstLetter = user?.name?.charAt(0).toUpperCase() || 'U';
 
@@ -27,6 +37,58 @@ const ExpenseDashboard = () => {
       } catch (error) {
         console.error('Delete expense error:', error);
       }
+    }
+  };
+
+  const handleEditExpense = (expense) => {
+    setSelectedExpense(expense);
+    setFormData({
+      description: expense.name,
+      amount: expense.amount,
+      category: expense.category,
+      date: new Date(expense.date).toISOString().split('T')[0]
+    });
+    setShowEditModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowEditModal(false);
+    setSelectedExpense(null);
+    setFormData({
+      description: '',
+      amount: '',
+      category: '',
+      date: ''
+    });
+  };
+
+  const handleFormChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleUpdateExpense = async (e) => {
+    e.preventDefault();
+    try {
+      const result = await updateExpense(selectedExpense.id, {
+        description: formData.description,
+        amount: parseFloat(formData.amount),
+        category: formData.category,
+        date: formData.date
+      });
+      
+      if (result.success) {
+        await fetchExpenses();
+        handleCloseModal();
+      } else {
+        alert(result.message || 'Failed to update expense');
+      }
+    } catch (error) {
+      console.error('Update expense error:', error);
+      alert('Failed to update expense');
     }
   };
 
@@ -350,6 +412,7 @@ const ExpenseDashboard = () => {
                         <p className="font-black text-sm whitespace-nowrap">₹{expense.amount}</p>
                         <button 
                           className="p-1 hover:bg-black hover:text-yellow-400 border-2 border-black transition-colors"
+                          onClick={() => handleEditExpense(expense)}
                           title="Edit expense"
                         >
                           <FiEdit2 className="text-sm" />
@@ -435,6 +498,113 @@ const ExpenseDashboard = () => {
         )}
 
       </main>
+
+      {/* Edit Expense Modal */}
+      {showEditModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white border-8 border-black shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] max-w-md w-full max-h-[90vh] overflow-y-auto">
+            {/* Modal Header */}
+            <div className="bg-yellow-400 border-b-8 border-black p-6">
+              <h2 className="font-black text-2xl uppercase">Edit Expense</h2>
+            </div>
+
+            {/* Modal Body */}
+            <form onSubmit={handleUpdateExpense} className="p-6">
+              {/* Description Field */}
+              <div className="mb-6">
+                <label className="block font-black text-sm uppercase mb-2">
+                  Description
+                </label>
+                <input
+                  type="text"
+                  name="description"
+                  value={formData.description}
+                  onChange={handleFormChange}
+                  className="w-full px-4 py-3 border-4 border-black font-bold focus:outline-none focus:ring-4 focus:ring-yellow-400"
+                  placeholder="Enter description"
+                  required
+                />
+              </div>
+
+              {/* Amount Field */}
+              <div className="mb-6">
+                <label className="block font-black text-sm uppercase mb-2">
+                  Amount (₹)
+                </label>
+                <input
+                  type="number"
+                  name="amount"
+                  value={formData.amount}
+                  onChange={handleFormChange}
+                  className="w-full px-4 py-3 border-4 border-black font-bold focus:outline-none focus:ring-4 focus:ring-yellow-400"
+                  placeholder="Enter amount"
+                  min="0"
+                  step="0.01"
+                  required
+                />
+              </div>
+
+              {/* Category Field */}
+              <div className="mb-6">
+                <label className="block font-black text-sm uppercase mb-2">
+                  Category
+                </label>
+                <select
+                  name="category"
+                  value={formData.category}
+                  onChange={handleFormChange}
+                  className="w-full px-4 py-3 border-4 border-black font-bold focus:outline-none focus:ring-4 focus:ring-yellow-400 bg-white"
+                  required
+                >
+                  <option value="">Select Category</option>
+                  <option value="Food">Food</option>
+                  <option value="Transportation">Transportation</option>
+                  <option value="Entertainment">Entertainment</option>
+                  <option value="Shopping">Shopping</option>
+                  <option value="Bills">Bills</option>
+                  <option value="Healthcare">Healthcare</option>
+                  <option value="Education">Education</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+
+              {/* Date Field */}
+              <div className="mb-6">
+                <label className="block font-black text-sm uppercase mb-2">
+                  Date
+                </label>
+                <input
+                  type="date"
+                  name="date"
+                  value={formData.date}
+                  onChange={handleFormChange}
+                  className="w-full px-4 py-3 border-4 border-black font-bold focus:outline-none focus:ring-4 focus:ring-yellow-400"
+                  required
+                />
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex gap-4">
+                <button
+                  type="submit"
+                  className="flex-1 bg-black text-yellow-400 font-black uppercase py-3 border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all"
+                  disabled={loading}
+                >
+                  {loading ? 'Updating...' : 'Update'}
+                </button>
+                <button
+                  type="button"
+                  onClick={handleCloseModal}
+                  className="flex-1 bg-white text-black font-black uppercase py-3 border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all"
+                  disabled={loading}
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
