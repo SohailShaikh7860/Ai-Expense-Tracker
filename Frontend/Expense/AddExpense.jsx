@@ -294,25 +294,25 @@ const AddExpense = () => {
                 </div>
               ) : (
                 <div className="border-4 border-black bg-white p-4">
-                  <div className="flex items-center justify-between mb-3">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-3">
                     <span className="font-black text-sm uppercase">Receipt Preview</span>
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 w-full sm:w-auto">
                       <button
                         type="button"
                         onClick={handleScanReceipt}
                         disabled={isScanning}
-                        className="px-4 py-2 bg-blue-600 text-white font-bold uppercase text-xs border-2 border-black hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
+                        className="flex-1 sm:flex-none px-3 py-2 sm:px-4 sm:py-2 bg-blue-600 text-white font-bold uppercase text-xs border-2 border-black hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
                       >
-                        <FiCamera className="text-sm" />
-                        {isScanning ? 'Scanning...' : 'Scan Receipt'}
+                        <FiCamera className="text-base sm:text-sm" />
+                        <span className="hidden sm:inline">{isScanning ? 'Scanning...' : 'Scan'}</span>
                       </button>
                       <button
                         type="button"
                         onClick={handleRemoveReceipt}
-                        className="px-4 py-2 bg-red-600 text-white font-bold uppercase text-xs border-2 border-black hover:bg-red-700 transition-colors flex items-center gap-2"
+                        className="flex-1 sm:flex-none px-3 py-2 sm:px-4 sm:py-2 bg-red-600 text-white font-bold uppercase text-xs border-2 border-black hover:bg-red-700 transition-colors flex items-center justify-center gap-2"
                       >
-                        <FiX className="text-sm" />
-                        Remove
+                        <FiX className="text-base sm:text-sm" />
+                        <span className="hidden sm:inline">Remove</span>
                       </button>
                     </div>
                   </div>

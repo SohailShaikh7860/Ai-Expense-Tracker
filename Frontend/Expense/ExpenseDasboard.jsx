@@ -322,7 +322,7 @@ const ExpenseDashboard = () => {
               <FiDollarSign className="text-2xl" />
             </div>
             <p className="font-black text-3xl">₹{stats.thisMonth.toLocaleString()}</p>
-            <p className="font-bold text-xs mt-2">December 2025</p>
+            <p className="font-bold text-xs mt-2">{new Date().toLocaleString('default', { month: 'long', year: 'numeric' })}</p>
           </div>
 
           
