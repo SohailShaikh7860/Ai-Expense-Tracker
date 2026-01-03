@@ -2,6 +2,7 @@ import { analyzeSimpleExpenses, analyzeTransportExpenses } from "../service/AIAn
 import Expense from "../model/expense.model.js";
 import User from "../model/user.model.js";
 import { transport } from "../config/nodeMailer.js";
+import { monthlyReportTemplate } from "../config/EmailTemplate.js";
 
 // Helper: Get expenses for a specific user and month
 const getExpensesByUserAndMonth = async (userId, month, year) => {
@@ -66,13 +67,13 @@ const generateAllSimpleReports = async () => {
                     reportType: 'personal'
                 });
 
+                
                 await transport.sendMail({
+                    from: `"ExpenseFlow" <${process.env.SENDER_EMAIL}>`,
                     to: user.email,
                     subject: `Your Monthly Expense Report - ${monthNames[lastMonth]} ${lastYear}`,
                     html: emailContent
                 });
-
-                console.log(`✅ Report sent to ${user.name} (${user.email})`);
                 successCount++;
 
             } catch (error) {
@@ -81,16 +82,13 @@ const generateAllSimpleReports = async () => {
             }
         }
 
-        console.log(`Report generation complete. Success: ${successCount}, Failed: ${failCount}`);
         return { success: successCount, failed: failCount };
 
     } catch (error) {
-        console.error("Generate all reports error:", error);
         throw error;
     }
 };
 
 export {
-    generateSimpleExpenseReport,
     generateAllSimpleReports
 };

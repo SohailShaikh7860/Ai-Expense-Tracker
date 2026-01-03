@@ -4,6 +4,7 @@ import tripRouter from './routes/trip.routes.js';
 import razorpayRouter from './routes/razorpay.Route.js';
 import expenseRouter from './routes/expense.route.js';
 import BudgetRoute from './routes/budget.route.js';
+import reportRouter from './routes/report.route.js';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 
@@ -47,5 +48,6 @@ app.use('/trip', tripRouter);
 app.use('/razorpay', razorpayRouter);
 app.use('/expense', expenseRouter);
 app.use('/budget', BudgetRoute);
+app.use('/report', reportRouter);
 
 export default app;
