@@ -4,13 +4,13 @@
 
 ![ExpenseFlow Banner](.github/ScreenShots/Home.png)
 
-**A modern, full-stack expense tracking application with dual-mode functionality for both transport businesses and personal expense management.**
+**A modern, full-stack expense tracking application with dual-mode functionality for both transport businesses and personal expense management, plus AI-powered receipts and monthly AI email summaries.**
 
 [![Node.js](https://img.shields.io/badge/Node.js-18+-green.svg)](https://nodejs.org/)
 [![React](https://img.shields.io/badge/React-19.2-blue.svg)](https://reactjs.org/)
 [![MongoDB](https://img.shields.io/badge/MongoDB-8.0-brightgreen.svg)](https://www.mongodb.com/)
 
-[Live Demo](#) | [Report Bug](#) | [Request Feature](#)
+[Live Demo](https://myexpenseflow.vercel.app/) | [Report Bug](#) | [Request Feature](#)
 
 </div>
 
@@ -43,6 +43,7 @@
 - **Responsive Design** - Brutalist UI that works on all devices
 - **Cloud Storage** - Receipt uploads via Cloudinary
 - **AI Receipt Scanning** - Automatic expense data extraction from receipt images using OpenAI Vision API
+- **Monthly AI Email Reports** - Automatic monthly summaries with AI insights on spending, budgets, and recommendations
 
 ### Transport Mode Features
 - Trip expense tracking with detailed breakdowns
@@ -54,8 +55,8 @@
 
 ### Personal Mode Features
 - Daily expense tracking across 11+ categories
-- Budget management with visual progress bars
-- Monthly spending analytics
+- Budget management with visual progress bars and alerts
+- Monthly spending analytics and AI email summaries
 - Recurring expense support
 - Tag-based organization
 - Payment method tracking (Cash, UPI, Card, etc.)
@@ -421,21 +422,6 @@ Contributions are welcome! Please follow these steps:
 - Charts from [Recharts](https://recharts.org/)
 - Payment gateway by [Razorpay](https://razorpay.com/)
 - AI capabilities powered by [OpenAI](https://openai.com/)
-
----
-
-## Future Enhancements
-
-- [ ] Receipt OCR with Google Gemini AI
-- [ ] Dark mode support
-- [ ] Export to CSV/PDF
-- [ ] Multi-currency support
-- [ ] Mobile app (React Native)
-- [ ] Expense sharing with friends/family
-- [ ] Budget recommendations with AI
-- [ ] Recurring expense automation
-- [ ] Bank account integration
-- [ ] Tax calculation and reports
 
 ---
 

@@ -61,11 +61,10 @@ const Hero = () => {
           </span>
             </div>
             <h3 className="font-black text-xl uppercase mb-3 leading-tight">
-              Track Every Trip
+              AI Receipt Scan
             </h3>
             <p className="font-bold text-sm leading-relaxed">
-              Monitor income, expenses, and profit for each journey in
-              real-time.
+              Snap a receipt and auto-fill amount, category, date, and merchant using OpenAI Vision.
             </p>
           </div>
 
@@ -76,10 +75,10 @@ const Hero = () => {
           </span>
             </div>
             <h3 className="font-black text-xl uppercase mb-3 leading-tight">
-              Smart Analytics
+              Dual Mode, One Website
             </h3>
             <p className="font-bold text-sm leading-relaxed">
-              Visualize expenses with pie charts and detailed breakdowns.
+              Use Transport or Personal mode anytime—switch seamlessly while keeping your data organized.
             </p>
           </div>
 
@@ -90,10 +89,10 @@ const Hero = () => {
           </span>
             </div>
             <h3 className="font-black text-xl uppercase mb-3 leading-tight">
-              Export to PDF
+              Monthly AI Reports
             </h3>
             <p className="font-bold text-sm leading-relaxed">
-              Download professional trip reports with one click.
+              Get an automatic monthly email with AI insights on spending, budget status, and suggestions.
             </p>
           </div>
         </div>
@@ -247,7 +246,7 @@ const Hero = () => {
               <div>
                 <h3 className="font-black text-lg uppercase">Create Account</h3>
                 <p className="font-bold text-sm">
-                  Sign up for free in under 30 seconds
+                  Sign up for free and pick Transport or Personal mode.
                 </p>
               </div>
             </div>
@@ -258,10 +257,10 @@ const Hero = () => {
               </div>
               <div>
                 <h3 className="font-black text-lg uppercase">
-                  Add Trip Details
+                  Scan or Add Expenses
                 </h3>
                 <p className="font-bold text-sm">
-                  Enter vehicle, route, and expenses
+                  Snap receipts to auto-fill details, or enter trips/expenses manually.
                 </p>
               </div>
             </div>
@@ -271,9 +270,9 @@ const Hero = () => {
                 3
               </div>
               <div>
-                <h3 className="font-black text-lg uppercase">Track & Export</h3>
+                <h3 className="font-black text-lg uppercase">Review & Export</h3>
                 <p className="font-bold text-sm">
-                  View analytics and download PDFs
+                  See analytics, budgets, and monthly AI email summaries; export PDFs anytime.
                 </p>
               </div>
             </div>
