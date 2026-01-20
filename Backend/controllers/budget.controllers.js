@@ -22,7 +22,7 @@ export const createBudget = async(req,res)=>{
         })
         return res.status(201).json({ message: "Budget created successfully", newBudget });
     } catch (error) {
-        return res.status(500).json({ message: "Internal server error", error: error.message });
+        return res.status(500).json({ message: "Failed to create budget"});
     }
 }
 
@@ -54,7 +54,7 @@ export const getBudget = async(req,res)=>{
         
         return res.status(200).json({message: "Budget fetched successfully", budget: budgetWithSpent});
     } catch (error) {
-        return res.status(500).json({ message: "Failed to get budget", error: error.message });
+        return res.status(500).json({ message: "Failed to get budget"});
     }
 }
 
@@ -89,7 +89,7 @@ export const getAllBudgets = async(req,res)=>{
         
         return res.status(200).json({budgets: budgetsWithSpent, count: budgetsWithSpent.length});
     }catch(error){
-        return res.status(500).json({ message: "Failed to get budgets", error: error.message });
+        return res.status(500).json({ message: "Failed to get budgets" });
     }
 }
 
@@ -121,7 +121,7 @@ export const updateBudget = async(req,res)=>{
         }
         return res.status(200).json({message: "Budget updated successfully", updatedBudget});
     } catch (error) {
-        return res.status(500).json({ message: "Failed to update budget", error: error.message });
+        return res.status(500).json({ message: "Failed to update budget" });
     }
 }
 
@@ -146,6 +146,6 @@ export const deleteBudget = async(req,res)=>{
         
         return res.status(200).json({message: "Budget deleted successfully"});
     } catch (error) {
-        return res.status(500).json({ message: "Failed to delete budget", error: error.message });
+        return res.status(500).json({ message: "Failed to delete budget" });
     }
 }

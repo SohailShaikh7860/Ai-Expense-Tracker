@@ -42,7 +42,7 @@ export const createOrder = async (req, res) => {
   } catch (error) {
     return res
       .status(500)
-      .json({ message: "Internal server error", error: error.message });
+      .json({ message: "Failed to create order"});
   }
 };
 
@@ -82,7 +82,7 @@ export const verifyPayment = async (req, res) => {
   } catch (error) {
     return res
       .status(500)
-      .json({ message: "Internal server error", error: error.message });
+      .json({ message: "Failed to verify payment" });
   }
 };
 
@@ -96,7 +96,7 @@ export const getPayments = async (req, res) => {
   } catch (error) {
     return res
       .status(500)
-      .json({ message: "Internal server error", error: error.message });
+      .json({ message: "Failed to get payments" });
   }
 };
 
@@ -113,6 +113,6 @@ export const getSupporters = async (req, res) => {
   } catch (error) {
     return res
       .status(500)
-      .json({ message: "Internal server error", error: error.message });
+      .json({ message: "Failed to get supporters" });
   }
 };

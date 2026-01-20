@@ -20,8 +20,7 @@ const createExpense = async (req, res) => {
         const newExpense = await Expense.create(expenseData);
         return res.status(201).json({ message: "Expense created successfully", newExpense });
     } catch (error) {
-        console.error("Create Expense Error:", error);
-        return res.status(500).json({ message: "Failed to create expense", error: error.message });
+        return res.status(500).json({ message: "Failed to create expense" });
     }
 }
 
@@ -54,7 +53,7 @@ const getAllExpense = async (req, res) => {
 
         return res.status(200).json({ expenses, total });
      } catch (error) {
-        return res.status(500).json({ message: "Internal server error", error: error.message });
+        return res.status(500).json({ message: "Failed to retrieve expenses" });
      }
 }
 
@@ -69,7 +68,7 @@ const expenseById = async (req,res)=>{
         }
         return res.status(200).json({ expense });
     } catch (error) {
-        return res.status(500).json({ message: "Internal server error", error: error.message });
+        return res.status(500).json({ message: "Failed to retrieve expense" });
     }
 }
 
@@ -84,7 +83,7 @@ const deleteExpense = async (req,res)=>{
         }
         return res.status(200).json({ message: "Expense deleted successfully" });
     } catch (error) {
-        return res.status(500).json({ message: "Internal server error", error: error.message });
+        return res.status(500).json({ message: "Failed to delete expense" });
     }
 }
 
@@ -103,7 +102,7 @@ const updateExpense = async (req,res)=>{
         }
         return res.status(200).json({ message: "Expense updated successfully", updatedExpense });
     } catch (error) {
-        return res.status(500).json({ message: "Internal server error", error: error.message });
+        return res.status(500).json({ message: "Failed to update expense" });
     }
 }
 
@@ -175,10 +174,8 @@ const getExpenseStats = async (req, res) => {
             }
         });
     } catch (error) {
-        console.error('Get stats error:', error);
         return res.status(500).json({ 
-            message: "Internal server error", 
-            error: error.message 
+            message: "Failed to get expense statistics"
         });
     }
 }
@@ -204,10 +201,8 @@ const scanReceipt = async (req, res) => {
             }
         });
     } catch (error) {
-        console.error("Scan receipt error:", error);
         return res.status(500).json({ 
             message: "Failed to scan receipt", 
-            error: error.message 
         });
     }
 };
@@ -241,10 +236,8 @@ const uploadReceipt = async (req, res) => {
             receipt: expense.receipt 
         });
     } catch (error) {
-        console.error("Upload receipt error:", error);
         return res.status(500).json({ 
-            message: "Failed to upload receipt", 
-            error: error.message 
+            message: "Failed to upload receipt"
         });
     }
 };

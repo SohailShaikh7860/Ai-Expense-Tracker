@@ -43,12 +43,9 @@ const createTripExpense = async(req,res)=>{
 
         const netProfit = tripExpense.netProfit;
 
-        console.log("Profit",netProfit);
-        
-
         return res.status(201).json({message:"Trip expense created successfully", tripExpense});
     } catch (error) {
-        return res.status(500).json({message:"Internal server error", error: error.message});
+        return res.status(500).json({message:"Failed to create trip expense"});
     }
 }
 
@@ -63,8 +60,7 @@ const getTripExpenses = async(req,res)=>{
         }
         res.status(200).json({trip});
     } catch (error) {
-        console.log("Error",error.message);
-        return res.status(500).json({message:"Internal server error"});
+        return res.status(500).json({message:"Failed to retrieve trip expense"});
     }
 }
 
@@ -74,7 +70,6 @@ const getAllTripExpenses = async(req,res)=>{
         const trips = await TripExpenses.find({ userId }).sort({createdAt: -1});
         return res.status(200).json({trips, count: trips.length});
     } catch (error) {
-        console.error('Get trips error:',error);
         return res.status(500).json({message:"Failed to retrieve trips"});
     }
 }
@@ -149,8 +144,7 @@ const updateTrips = async (req, res) => {
     });
 
   } catch (error) {
-    console.error("Update trip error:", error);
-    return res.status(500).json({ message: "Internal server error" });
+    return res.status(500).json({ message: "Failed to update trip expense" });
   }
 };
 
@@ -165,8 +159,7 @@ const deleteTrip = async(req,res)=>{
         }
         return res.status(200).json({message:"Trip expense deleted successfully"});
     } catch (error) {
-        console.error("Delete trip error:", error);
-        return res.status(500).json({message:"Internal server error"});
+        return res.status(500).json({message:"Failed to delete trip expense"});
     }
 }
 
@@ -195,7 +188,6 @@ const uploadRecipt = async(req,res)=>{
       await trip.save();
       res.status(200).json({message:"Receipt uploaded successfully", receipt: trip.receipts[trip.receipts.length - 1]});
     } catch (error) {
-      console.log('upload error',error);
       return res.status(500).json({message:"Failed to upload receipt"});
     }
 }
@@ -222,7 +214,6 @@ const deleteRecipt = async(req,res)=>{
 
       res.status(200).json({message:"Receipt deleted successfully"});
     } catch (error) {
-      console.log('delete receipt error',error);
       return res.status(500).json({message:"Failed to delete receipt"});
     }
   }
@@ -239,8 +230,7 @@ const deleteRecipt = async(req,res)=>{
 
     res.status(200).json({ receipts: trip.receipts });
   } catch (error) {
-    console.error('Get receipts error:', error);
-    res.status(500).json({ message: 'Failed to get receipts' });
+    return res.status(500).json({ message: 'Failed to get receipts' });
   }
 };
 
