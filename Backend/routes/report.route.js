@@ -68,6 +68,15 @@ router.post('/cron/transport-reports', verifyCronSecret, async (req, res) => {
     }
 });
 
+router.get('/test-smtp', async (req, res) => {
+    try {
+        await transport.verify();
+        res.json({ success: true, message: 'SMTP connection verified!' });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+});
+
 // Protected admin routes
 router.use(authToken);
 
